@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicSense Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/styles.css?v=2">
+</head>
+<body class="admin-body">
+    <div class="admin-shell shell">
+        <header class="admin-topbar">
+            <a href="/index.html" class="brand">
+                <span class="brand-mark"><i class="fa-solid fa-location-dot"></i></span>
+                <span>
+                    <strong>CivicSense</strong>
+                    <small>Admin Dashboard</small>
+                </span>
+            </a>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="language-switcher" id="language-switcher">
+                    <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-language"></i>
+                        <span id="lang-current">English</span>
+                        <i class="fa-solid fa-chevron-down lang-caret"></i>
+                    </button>
+                    <div class="lang-menu" id="lang-menu">
+                        <button type="button" class="lang-option" data-lang="en">English</button>
+                        <button type="button" class="lang-option" data-lang="hi">हिंदी</button>
+                    </div>
+                </div>
+                <button id="logout-button" class="button button-secondary hidden">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <section id="login-view" class="login-panel glass-card">
+            <span class="eyebrow" data-i18n="admin_login_eyebrow">Admin Access</span>
+            <h1 data-i18n="admin_login_title">Track, filter and resolve complaints</h1>
+            <p data-i18n="admin_login_text">Use the simple Spring Boot login to manage civic issues securely.</p>
+            <form id="login-form" class="login-form">
+                <label>
+                    <span data-i18n="admin_label_username">Username</span>
+                    <input id="username" type="text" value="admin" required>
+                </label>
+                <label>
+                    <span data-i18n="admin_label_password">Password</span>
+                    <input id="password" type="password" value="admin123" required>
+                </label>
+                <button type="submit" class="button button-primary" data-i18n="admin_button_login">Login</button>
+                <p class="muted"><span data-i18n="admin_demo_credentials">Demo credentials:</span> <strong>admin / admin123</strong></p>
+            </form>
+        </section>
+
+        <section id="dashboard-view" class="hidden">
+            <div class="admin-hero">
+                <div>
+                    <span class="eyebrow" data-i18n="admin_dashboard_eyebrow">Operational View</span>
+                    <h1 data-i18n="admin_dashboard_title">Complaint routing and resolution dashboard</h1>
+                    <p data-i18n="admin_dashboard_text">Filter issues by category, city, area, and status, then update them with authenticated admin actions.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-stats" id="dashboard-stats">
+                <article class="metric-card">
+                    <span data-i18n="admin_metric_total">Total</span>
+                    <strong id="metric-total">0</strong>
+                </article>
+                <article class="metric-card warning">
+                    <span data-i18n="admin_metric_pending">Pending</span>
+                    <strong id="metric-pending">0</strong>
+                </article>
+                <article class="metric-card info">
+                    <span data-i18n="admin_metric_progress">In Progress</span>
+                    <strong id="metric-progress">0</strong>
+                </article>
+                <article class="metric-card success">
+                    <span data-i18n="admin_metric_resolved">Resolved</span>
+                    <strong id="metric-resolved">0</strong>
+                </article>
+            </div>
+
+            <div class="admin-toolbar glass-card">
+                <label>
+                    <span data-i18n="admin_filter_category">Category</span>
+                    <select id="filter-category"></select>
+                </label>
+                <label>
+                    <span data-i18n="admin_filter_city">City</span>
+                    <select id="filter-city"></select>
+                </label>
+                <label>
+                    <span data-i18n="admin_filter_status">Status</span>
+                    <select id="filter-status">
+                        <option value="all" data-i18n="admin_status_all">All statuses</option>
+                        <option value="pending" data-i18n="admin_status_pending">Pending</option>
+                        <option value="in_progress" data-i18n="admin_status_progress">In Progress</option>
+                        <option value="resolved" data-i18n="admin_status_resolved">Resolved</option>
+                    </select>
+                </label>
+                <label>
+                    <span data-i18n="admin_filter_area">Area</span>
+                    <input id="filter-area" type="text" data-i18n-placeholder="admin_placeholder_area" placeholder="Search by locality">
+                </label>
+            </div>
+
+            <div class="admin-grid">
+                <section class="glass-card">
+                    <div class="panel-head">
+                        <h2 data-i18n="admin_queue_title">Complaint queue</h2>
+                        <span id="admin-count" data-i18n="admin_queue_count">0 items</span>
+                    </div>
+                    <div id="complaint-list" class="complaint-list"></div>
+                </section>
+
+                <section class="glass-card">
+                    <div class="panel-head">
+                        <h2 data-i18n="admin_map_title">Issue map</h2>
+                        <span data-i18n="admin_map_subtitle">Filtered locations</span>
+                    </div>
+                    <div id="admin-map" class="admin-map"></div>
+                </section>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal hidden" id="issue-modal">
+        <div class="modal-card">
+            <button class="modal-close" id="close-modal" aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/district-data.js"></script>
+    <script src="/admin.js?v=2"></script>
+</body>
+</html>

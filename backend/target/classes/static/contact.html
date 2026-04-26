@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact CivicSense</title>
+    <meta name="description" content="Get in touch with the CivicSense team and meet the developers behind the project.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css?v=2">
+</head>
+<body class="contact-body">
+    <header class="contact-header">
+        <nav class="navbar shell">
+            <a class="brand" href="/index.html">
+                <span class="brand-mark"><i class="fa-solid fa-location-dot"></i></span>
+                <span>
+                    <strong>CivicSense</strong>
+                    <small data-i18n="contact_brand_subtitle">Contact the Team</small>
+                </span>
+            </a>
+            <div class="nav-actions">
+                <div class="language-switcher" id="language-switcher">
+                    <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-language"></i>
+                        <span id="lang-current">English</span>
+                        <i class="fa-solid fa-chevron-down lang-caret"></i>
+                    </button>
+                    <div class="lang-menu" id="lang-menu">
+                        <button type="button" class="lang-option" data-lang="en">English</button>
+                        <button type="button" class="lang-option" data-lang="hi">हिंदी</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-links nav-links-static">
+                <a href="/index.html" data-i18n="contact_nav_home">Home</a>
+                <a href="/admin.html" data-i18n="contact_nav_admin">Admin</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="contact-main shell">
+        <section class="contact-hero glass-card">
+            <div class="contact-hero-copy">
+                <span class="eyebrow" data-i18n="contact_eyebrow">Contact Us</span>
+                <h1 data-i18n="contact_title">Get in touch with the CivicSense team.</h1>
+                <p data-i18n="contact_text">
+                    For project feedback, collaboration, or demo-related queries, reach out through email or Instagram.
+                </p>
+                <div class="contact-action-row">
+                    <a class="button button-primary" href="mailto:yusufkhan9695@gmail.com">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span data-i18n="contact_email_button">Email</span>
+                    </a>
+                    <a class="button button-secondary" href="https://www.instagram.com/yusufkhan.32" target="_blank" rel="noreferrer">
+                        <i class="fa-brands fa-instagram"></i>
+                        <span data-i18n="contact_instagram_button">Instagram</span>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-hero-panel">
+                <div class="signal-orb orb-one"></div>
+                <div class="signal-orb orb-two"></div>
+                <div class="contact-mini-card">
+                    <span data-i18n="contact_primary_label">Primary Contact</span>
+                    <strong>yusufkhan9695@gmail.com</strong>
+                    <small>@yusufkhan.32</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="developer-section">
+            <div class="section-heading reveal">
+                <span class="eyebrow" data-i18n="dev_eyebrow">Developers</span>
+                <h2 data-i18n="dev_title">Development Team</h2>
+                <p data-i18n="dev_text">The people behind the product and implementation.</p>
+            </div>
+            <div class="developer-grid">
+                <article class="developer-card lead reveal">
+                    <div class="developer-backdrop"></div>
+                    <div class="developer-avatar">
+                        <span>YK</span>
+                    </div>
+                    <div class="developer-content">
+                        <span class="developer-role-tag" data-i18n="dev_role_lead">Lead Developer</span>
+                        <h3>Yusuf Khan</h3>
+                        <p data-i18n="dev_yusuf_text">Led product direction and overall CivicSense implementation.</p>
+                    </div>
+                    <div class="developer-hover-state">
+                        <span data-i18n="dev_role_lead_short">Lead Developer</span>
+                    </div>
+                </article>
+
+                <article class="developer-card reveal">
+                    <div class="developer-backdrop"></div>
+                    <div class="developer-avatar secondary">
+                        <span>AK</span>
+                    </div>
+                    <div class="developer-content">
+                        <span class="developer-role-tag" data-i18n="dev_role_dev">Developer</span>
+                        <h3>Mohd. Amaan Khan</h3>
+                        <p data-i18n="dev_amaan_text">Supported implementation and feature delivery.</p>
+                    </div>
+                    <div class="developer-hover-state">
+                        <span data-i18n="dev_role_dev_short">Developer</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell footer-grid">
+            <div>
+                <strong>CivicSense</strong>
+                <p data-i18n="contact_footer_text">Citizen issue reporting and civic intelligence for Indian cities.</p>
+            </div>
+            <div>
+                <a href="/index.html" data-i18n="contact_footer_home">Home</a>
+                <a href="/admin.html" data-i18n="contact_footer_admin">Admin</a>
+                <a href="mailto:yusufkhan9695@gmail.com" data-i18n="contact_footer_email">Email</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/district-data.js"></script>
+    <script src="/contact.js?v=2"></script>
+</body>
+</html>

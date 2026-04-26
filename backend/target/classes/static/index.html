@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicSense | Civic Issue Heatmap for Indian Cities</title>
+    <meta name="description" content="Report civic issues, visualize complaint density on a heatmap, and help city authorities act faster.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/styles.css?v=2">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar shell">
+            <a class="brand" href="#top">
+                <span class="brand-mark"><i class="fa-solid fa-location-dot"></i></span>
+                <span>
+                    <strong>CivicSense</strong>
+                    <small data-i18n="brand_subtitle">Indian City Issue Tracker</small>
+                </span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="nav-actions">
+                <div class="language-switcher" id="language-switcher">
+                    <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Change language" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-language"></i>
+                        <span id="lang-current">English</span>
+                        <i class="fa-solid fa-chevron-down lang-caret"></i>
+                    </button>
+                    <div class="lang-menu" id="lang-menu">
+                        <button type="button" class="lang-option" data-lang="en">English</button>
+                        <button type="button" class="lang-option" data-lang="hi">हिंदी</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-links" id="nav-links">
+                <a href="#how-it-works" data-i18n="nav_how">How It Works</a>
+                <a href="#report" data-i18n="nav_report">Report</a>
+                <a href="#heatmap" data-i18n="nav_heatmap">Heatmap</a>
+                <a href="/contact.html" data-i18n="nav_contact">Contact</a>
+                <a href="/admin.html" class="nav-admin" data-i18n="nav_admin">Admin</a>
+            </div>
+        </nav>
+        <section class="hero shell" id="top">
+            <div class="hero-copy">
+                <span class="eyebrow" data-i18n="hero_eyebrow">PS-A04 Full Stack Demo</span>
+                <h1 data-i18n="hero_title">Turn scattered civic complaints into a live city heatmap.</h1>
+                <p data-i18n="hero_text">
+                    Citizens can report potholes, garbage dumps, broken streetlights, water leaks and more with photo evidence and exact location.
+                    Authorities can spot density, filter by district and area, and route each issue to the right department.
+                </p>
+                <div class="hero-actions">
+                    <a href="#report" class="button button-primary" data-i18n="hero_cta_report">Report an Issue</a>
+                    <a href="#heatmap" class="button button-secondary" data-i18n="hero_cta_heatmap">View Heatmap</a>
+                </div>
+                <div class="hero-stats" id="hero-stats">
+                    <article>
+                        <strong id="stat-total">0</strong>
+                        <span data-i18n="stats_tracked">issues tracked</span>
+                    </article>
+                    <article>
+                        <strong id="stat-pending">0</strong>
+                        <span data-i18n="stats_pending">awaiting action</span>
+                    </article>
+                    <article>
+                        <strong id="stat-resolved">0</strong>
+                        <span data-i18n="stats_resolved">resolved</span>
+                    </article>
+                </div>
+            </div>
+            <div class="hero-panel glass-card">
+                <div class="pulse-grid">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="hero-panel-header">
+                    <span class="status-dot"></span>
+                    <p data-i18n="routing_title">Live department routing</p>
+                </div>
+                <div class="route-list">
+                    <article>
+                        <span>🛣️</span>
+                        <div>
+                            <strong data-i18n="route_roads_title">Potholes and road damage</strong>
+                            <small data-i18n="route_roads_dept">Public Works Department</small>
+                        </div>
+                    </article>
+                    <article>
+                        <span>🗑️</span>
+                        <div>
+                            <strong data-i18n="route_garbage_title">Garbage and drainage</strong>
+                            <small data-i18n="route_garbage_dept">Municipal Corporation</small>
+                        </div>
+                    </article>
+                    <article>
+                        <span>💡</span>
+                        <div>
+                            <strong data-i18n="route_light_title">Broken streetlights</strong>
+                            <small data-i18n="route_light_dept">Electricity Department</small>
+                        </div>
+                    </article>
+                    <article>
+                        <span>💧</span>
+                        <div>
+                            <strong data-i18n="route_water_title">Water and sewer issues</strong>
+                            <small data-i18n="route_water_dept">Water Supply Board</small>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <main>
+        <section class="feature-band">
+            <div class="shell feature-grid" id="how-it-works">
+                <article class="feature-card reveal">
+                    <span class="feature-icon"><i class="fa-solid fa-camera-retro"></i></span>
+                    <h2 data-i18n="feature_1_title">1. Capture the issue</h2>
+                    <p data-i18n="feature_1_text">Upload a photo, choose a category, mark the location with GPS or map pin, and submit the complaint in seconds.</p>
+                </article>
+                <article class="feature-card reveal">
+                    <span class="feature-icon"><i class="fa-solid fa-fire-flame-curved"></i></span>
+                    <h2 data-i18n="feature_2_title">2. See problem density</h2>
+                    <p data-i18n="feature_2_text">The public heatmap turns individual complaints into city-level insight so hotspots are obvious at a glance.</p>
+                </article>
+                <article class="feature-card reveal">
+                    <span class="feature-icon"><i class="fa-solid fa-building-shield"></i></span>
+                    <h2 data-i18n="feature_3_title">3. Route and resolve</h2>
+                    <p data-i18n="feature_3_text">Each complaint is automatically mapped to a department and can be tracked by admins through resolution.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="report-section shell" id="report">
+            <div class="section-heading reveal">
+                <span class="eyebrow" data-i18n="report_eyebrow">Citizen Portal</span>
+                <h2 data-i18n="report_title">Report a civic issue with real location capture</h2>
+                <p data-i18n="report_text">Works with a simple Spring Boot backend and MySQL/H2 storage. No React required.</p>
+            </div>
+            <div class="report-layout">
+                <form id="report-form" class="report-form glass-card reveal">
+                    <div class="form-grid">
+                        <label>
+                            <span data-i18n="label_category">Issue category</span>
+                            <select id="category" required></select>
+                        </label>
+                        <label>
+                            <span data-i18n="label_district">District / Uttar Pradesh</span>
+                            <select id="city" required></select>
+                        </label>
+                        <label>
+                            <span data-i18n="label_area">Area / locality</span>
+                            <input id="area" type="text" data-i18n-placeholder="placeholder_area" placeholder="Eg. Anna Nagar, Bandra West" required>
+                        </label>
+                        <label>
+                            <span data-i18n="label_address">Landmark / address</span>
+                            <input id="address" type="text" data-i18n-placeholder="placeholder_address" placeholder="Nearest road, landmark, or colony" required>
+                        </label>
+                    </div>
+
+                    <label>
+                        <span data-i18n="label_description">Description</span>
+                        <textarea id="description" rows="4" data-i18n-placeholder="placeholder_description" placeholder="Tell us what happened, how severe it is, and anything authorities should know."></textarea>
+                    </label>
+
+                    <div class="form-grid">
+                        <label>
+                            <span data-i18n="label_name">Your name</span>
+                            <input id="reporterName" type="text" data-i18n-placeholder="placeholder_name" placeholder="Citizen name" required>
+                        </label>
+                        <label>
+                            <span data-i18n="label_phone">Phone number</span>
+                            <input id="reporterPhone" type="tel" data-i18n-placeholder="placeholder_phone" placeholder="10 digit mobile number" required>
+                        </label>
+                        <label>
+                            <span data-i18n="label_email">Email</span>
+                            <input id="reporterEmail" type="email" data-i18n-placeholder="placeholder_email" placeholder="Optional email for updates">
+                        </label>
+                        <label>
+                            <span data-i18n="label_department">Assigned department</span>
+                            <input id="departmentPreview" type="text" readonly data-i18n-placeholder="placeholder_department" placeholder="Choose a category first">
+                        </label>
+                    </div>
+
+                    <div class="photo-grid">
+                        <label class="upload-card">
+                            <span data-i18n="label_photo">Issue photo</span>
+                            <input id="photo" type="file" accept="image/*" capture="environment">
+                            <small data-i18n="photo_help">Capture or upload a photo from your device.</small>
+                        </label>
+                        <div class="photo-preview" id="photo-preview">
+                            <i class="fa-regular fa-image"></i>
+                            <span data-i18n="photo_preview">Photo preview will appear here</span>
+                        </div>
+                    </div>
+
+                    <div class="location-card">
+                        <div class="location-actions">
+                            <div>
+                                <span data-i18n="location_title">Location capture</span>
+                                <small data-i18n="location_help">Use GPS or click the map to place the issue.</small>
+                            </div>
+                            <button type="button" class="button button-secondary" id="gps-button">
+                                <i class="fa-solid fa-crosshairs"></i>
+                                <span data-i18n="gps_button">Use GPS</span>
+                            </button>
+                        </div>
+                        <div id="picker-map" class="mini-map"></div>
+                        <div class="location-readout" id="location-status" data-i18n="location_none">No coordinates selected yet.</div>
+                        <input id="latitude" type="hidden">
+                        <input id="longitude" type="hidden">
+                    </div>
+
+                    <button type="submit" class="button button-primary submit-button">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span data-i18n="submit_button">Submit Complaint</span>
+                    </button>
+                </form>
+
+                <aside class="tips-card glass-card reveal">
+                    <h3 data-i18n="tips_title">Better reports get faster action</h3>
+                    <ul>
+                        <li data-i18n="tips_1">Use a landmark that local authorities can identify quickly.</li>
+                        <li data-i18n="tips_2">Choose the exact issue category so routing is correct.</li>
+                        <li data-i18n="tips_3">Add a clear photo when it is safe to do so.</li>
+                        <li data-i18n="tips_4">Pin the exact location for reliable heatmap density.</li>
+                    </ul>
+                    <div class="issue-pills" id="issue-pills"></div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="heatmap-section shell" id="heatmap">
+            <div class="section-heading reveal">
+                <span class="eyebrow" data-i18n="heatmap_eyebrow">Issue Density</span>
+                <h2 data-i18n="heatmap_title">Interactive civic issue heatmap</h2>
+                <p data-i18n="heatmap_text">Filter by category and district to reveal hotspots and recurring infrastructure pain points.</p>
+            </div>
+            <div class="heatmap-toolbar glass-card reveal">
+                <label>
+                    <span data-i18n="filter_category">Category</span>
+                    <select id="heatmap-category-filter"></select>
+                </label>
+                <label>
+                    <span data-i18n="filter_district">District / Uttar Pradesh</span>
+                    <select id="heatmap-city-filter"></select>
+                </label>
+                <label>
+                    <span data-i18n="filter_area">Area search</span>
+                    <input id="heatmap-area-filter" type="text" data-i18n-placeholder="placeholder_filter_area" placeholder="Filter by locality">
+                </label>
+                <div class="toolbar-count" id="heatmap-count">0 issues shown</div>
+            </div>
+            <div class="map-shell reveal">
+                <div id="heatmap-map" class="main-map"></div>
+                <div class="map-legend glass-card">
+                    <h3 data-i18n="legend_title">Density scale</h3>
+                    <div class="legend-gradient"></div>
+                    <div class="legend-labels">
+                        <span data-i18n="legend_low">Low</span>
+                        <span data-i18n="legend_high">High</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell footer-grid">
+            <div>
+                <strong>CivicSense</strong>
+                <p data-i18n="footer_text">Single Spring Boot web app with citizen and admin views for hackathon demo delivery.</p>
+            </div>
+            <div>
+                <a href="#report" data-i18n="footer_report">Report</a>
+                <a href="#heatmap" data-i18n="footer_heatmap">Heatmap</a>
+                <a href="/contact.html" data-i18n="footer_contact">Contact Us</a>
+                <a href="/admin.html" data-i18n="footer_admin">Admin Dashboard</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="/district-data.js"></script>
+    <script src="/app.js?v=2"></script>
+</body>
+</html>
